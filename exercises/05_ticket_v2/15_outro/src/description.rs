@@ -2,7 +2,49 @@
 //   enforcing that the description is not empty and is not longer than 500 bytes.
 //   Implement the traits required to make the tests pass too.
 
+use crate::Ticket;
+#[derive(Debug, PartialEq, Clone)]
 pub struct TicketDescription(String);
+
+#[derive(Debug, thiserror::Error)]
+pub enum ParseTicketDescriptionError {
+    #[error("The description cannot be empty")]
+    DescriptionCannotBeEmpty,
+    #[error("The description cannot be longer than 500 bytes")]
+    DescriptionTooLong,
+}
+
+impl TryFrom<String> for TicketDescription {
+    type Error = ParseTicketDescriptionError;
+
+    fn try_from(description: String) -> Result<Self, Self::Error> {
+        if description.is_empty() {
+            return Err(ParseTicketDescriptionError::DescriptionCannotBeEmpty);
+        }
+
+        if description.len() > 500 {
+            return Err(ParseTicketDescriptionError::DescriptionTooLong);
+        }
+
+        Ok(TicketDescription(description))
+    }
+}
+
+impl TryFrom<&str> for TicketDescription {
+    type Error = ParseTicketDescriptionError;
+
+    fn try_from(description: &str) -> Result<Self, Self::Error> {
+        if description.is_empty() {
+            return Err(ParseTicketDescriptionError::DescriptionCannotBeEmpty);
+        }
+
+        if description.len() > 500 {
+            return Err(ParseTicketDescriptionError::DescriptionTooLong);
+        }
+
+        Ok(TicketDescription(description.into()))
+    }
+}
 
 #[cfg(test)]
 mod tests {
