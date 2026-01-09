@@ -27,7 +27,7 @@ pub fn server(receiver: Receiver<Command>) {
             }                
             Ok(Command::Get {id, response_sender}) => {
                 let ticket = store.get(id).cloned();
-                response_sender.send(ticket).expect("Unable to send response");
+                let _ = response_sender.send(ticket);
                 
             }
             Err(_) => {
