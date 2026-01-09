@@ -13,7 +13,7 @@ pub struct TicketStoreClient {
 
 impl TicketStoreClient {
     pub fn insert(&self, draft: TicketDraft) -> Result<TicketId, RecvError> {
-        let (response_sender, response_receiver) = std::sync::mpsc::sync_channel(20);
+        let (response_sender, response_receiver) = std::sync::mpsc::sync_channel(1);
         let command = Command::Insert {
             draft,
             response_channel: response_sender,
@@ -26,7 +26,7 @@ impl TicketStoreClient {
     }
 
     pub fn get(&self, id: TicketId) -> Result<Option<Ticket>, RecvError> {
-        let (response_sender, response_receiver) = std::sync::mpsc::sync_channel(20);
+        let (response_sender, response_receiver) = std::sync::mpsc::sync_channel(1);
         let command = Command::Get {
             id,
             response_channel: response_sender,
